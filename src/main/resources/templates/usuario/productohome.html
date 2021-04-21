@@ -49,7 +49,7 @@
               </a>
             </div>
             <div class="col-lg-6">
-              <form action="carrito.html" method="POST">
+              <form th:action="@{/cart}" method="POST">
                 <h2 class="card-title" th:text="${producto.nombre}"></h2>
 
                 <ul class="list-group">
@@ -61,6 +61,8 @@
                     Cantidad: <input type="number" id="cantidad" name="cantidad" autocomplete="off"
                     min="1" max="5" value="1">
                   </h6></li>
+                  
+                  
                 </ul>
 
 
@@ -78,7 +80,6 @@
 
     <!-- Footer -->
    <div th:include="usuario/template_usuario.html::footer">
-   
    
    </div>
    
