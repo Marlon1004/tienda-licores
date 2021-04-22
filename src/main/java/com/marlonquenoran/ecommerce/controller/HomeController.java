@@ -1,6 +1,7 @@
 package com.marlonquenoran.ecommerce.controller;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,39 @@ public class HomeController {
 		orden.setTotal(sumaTotal);
 		model.addAttribute("cart", detalle);
 		model.addAttribute("orden", orden);
+		
+		return "usuario/carrito";
+	}
+	
+	
+	// metodo eliminar un producto del carrito de compras
+	
+	@GetMapping("/delete/cart/{id}")
+	public String deleteCar(@PathVariable Integer id, Model model) {
+		
+		//lista nueva de productos
+		List<DetalleOrden> ordenesNueva= new ArrayList<DetalleOrden>();
+		
+		for (DetalleOrden detalleOrden : detalle) {
+			
+			if (detalleOrden.getProducto().getId()!=id) {
+				
+				ordenesNueva.add(detalleOrden);
+			}
+			
+		}
+		
+		//poner la nueva lista con los productos restantes
+		detalle=ordenesNueva;
+		
+		double sumaTotal=0;
+		
+		sumaTotal=detalle.stream().mapToDouble(dt->dt.getTotal()).sum();
+		
+		orden.setTotal(sumaTotal);
+		model.addAttribute("cart", detalle);
+		model.addAttribute("orden", orden);
+		
 		
 		return "usuario/carrito";
 	}
