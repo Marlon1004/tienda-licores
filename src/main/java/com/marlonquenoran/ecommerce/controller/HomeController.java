@@ -1,5 +1,7 @@
 package com.marlonquenoran.ecommerce.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.marlonquenoran.ecommerce.model.DetalleOrden;
+import com.marlonquenoran.ecommerce.model.Orden;
 import com.marlonquenoran.ecommerce.model.Producto;
 import com.marlonquenoran.ecommerce.service.ProductoService;
 
@@ -23,6 +28,14 @@ public class HomeController {
 	
 	@Autowired
 	private ProductoService productoService;
+	
+	
+	// para almacenarr los detalles de la orden
+	List<DetalleOrden> detalle= new ArrayList<DetalleOrden>();
+	
+	// datos de la orden
+	Orden orden=new Orden();
+	
 	
 	@GetMapping("")
 	public String home(Model model) {
@@ -48,7 +61,15 @@ public class HomeController {
 	
 	
 	@PostMapping("/cart")
-	public String addCart() {
+	public String addCart(@RequestParam Integer id, @RequestParam Integer cantidad) {
+		
+		DetalleOrden detalleOrden=new DetalleOrden();
+		Producto producto=new Producto();
+		double sumaTotal=0;
+		
+		Optional<Producto> optionalPrroducto=productoService.get(id);
+		log.info("Producto añadido: {}", optionalPrroducto.get());
+		log.info("Cantidad: {}", cantidad);
 		
 		
 		return "usuario/carrito";
