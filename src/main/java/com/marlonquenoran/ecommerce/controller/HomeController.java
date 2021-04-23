@@ -1,7 +1,7 @@
 package com.marlonquenoran.ecommerce.controller;
 
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +20,8 @@ import com.marlonquenoran.ecommerce.model.DetalleOrden;
 import com.marlonquenoran.ecommerce.model.Orden;
 import com.marlonquenoran.ecommerce.model.Producto;
 import com.marlonquenoran.ecommerce.model.Usuario;
+import com.marlonquenoran.ecommerce.service.IDetalleOrdenService;
+import com.marlonquenoran.ecommerce.service.IOrdenService;
 import com.marlonquenoran.ecommerce.service.IUsuarioService;
 import com.marlonquenoran.ecommerce.service.ProductoService;
 
@@ -34,6 +36,12 @@ public class HomeController {
 	
 	@Autowired
 	private IUsuarioService usuarioService;
+	
+	@Autowired
+	private IOrdenService ordenService;
+	
+	@Autowired
+	private IDetalleOrdenService detalleOrdenService;
 	
 	
 	// para almacenarr los detalles de la orden
@@ -158,6 +166,40 @@ public class HomeController {
 		
 		return "usuario/resumenorden";
 	}
+	
+	
+	
+	//guardarr la orden
+	
+	@GetMapping("/saveOrder")
+	public String saveOrder() {
+		
+		Date fechaCreacion = new Date();
+		orden.setFechaCreacion(fechaCreacion);
+		orden.setNumero(ordenService.generarNumeroOrden());
+		
+		//usuario
+		Usuario usuario= usuarioService.findById(1).get();
+		
+		orden.setUsuario(usuario);
+		ordenService.save(orden);
+		
+		//guardar detalles
+		
+		for(DetalleOrden dt:detalle)
+		{
+			dt.setOrden(orden);
+			detalleOrdenService.save(dt);
+		}
+		
+		
+		///limpieza de lista y orden
+		orden=new Orden();
+		detalle.clear();
+		
+		return "redirect:/";
+	}
+	
 	
 
 }
