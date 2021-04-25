@@ -13,4 +13,6 @@ public interface IUsuarioService {
 	
 	Usuario save(Usuario usuario);
 	
+	Optional<Usuario> finByEmail(String email);
+	
 }
