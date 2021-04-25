@@ -1,9 +1,11 @@
 package com.marlonquenoran.ecommerce.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
+import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.marlonquenoran.ecommerce.model.Orden;
 import com.marlonquenoran.ecommerce.model.Usuario;
+import com.marlonquenoran.ecommerce.service.IOrdenService;
 import com.marlonquenoran.ecommerce.service.IUsuarioService;
 
 @Controller
@@ -26,6 +30,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private IUsuarioService usuarioService;
+	
+	@Autowired
+	private IOrdenService ordenService;
 	
 	
 	// /usuario/registro
@@ -87,6 +94,11 @@ public class UsuarioController {
     public String obtenerCompras(Model model, HttpSession session) {
     	
     	model.addAttribute("sesion", session.getAttribute("idusuario"));
+    	
+    	Usuario usuario=usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+    	List<Orden> ordenes= ordenService.findByUsuario(usuario);
+    	
+    	model.addAttribute("ordenes", ordenes);
     	
     	return "usuario/compras";
     }
