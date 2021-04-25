@@ -13,11 +13,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.marlonquenoran.ecommerce.model.Producto;
 import com.marlonquenoran.ecommerce.model.Usuario;
+import com.marlonquenoran.ecommerce.service.IUsuarioService;
 import com.marlonquenoran.ecommerce.service.ProductoService;
 import com.marlonquenoran.ecommerce.service.UploadFileService;
+import com.marlonquenoran.ecommerce.service.UsuarioServiceImpl;
 
 import java.io.IOException;
 import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.*;
 
@@ -29,6 +33,9 @@ public class productoController {
 	
 	@Autowired
 	private ProductoService productoService;
+	
+	@Autowired
+	private IUsuarioService usuarioService;
 	
 	@Autowired
 	private UploadFileService upload;
@@ -45,14 +52,17 @@ public class productoController {
 		return "productos/create";
 	}
 	
+	
+	
+	
 	// Para enviar a base de datos
 	
 	@PostMapping("/save")
-	public String save(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+	public String save(Producto producto, @RequestParam("img") MultipartFile file, HttpSession session) throws IOException {
 		
 		LOGGER.info("Este es el objeto producto {}",producto);
 		
-		Usuario u= new Usuario(1, "", "", "", "", 0, "", "");
+		Usuario u= usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
 		producto.setUsuario(u);
 		
 		
